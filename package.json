@@ -2,7 +2,7 @@
   "name": "Pha",
   "version": "1.0.0",
   "description": "App to make properties search in Port Harcourt easier",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "cross-env NODE_ENV=development nodemon server",
