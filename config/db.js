@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 const dotenv = require('dotenv');
-
+const logger = require('../utils/logger');
 // load config
 dotenv.config({ path: './config/config.env' });
 
@@ -15,8 +15,8 @@ exports.connectDB = async () => {
     await client.connect();
 
     console.log('mongoDB Connected');
-  } finally {
-    // await client.close()
+  } catch(err) {
+    logger.error(err.message);
   }
 };
 

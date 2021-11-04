@@ -5,20 +5,21 @@ const catchAsync = require('../utils/catchAsync');
 const logger = require('../utils/logger');
 const sendmail = require('../utils/sendEmail');
 const { successResMsg, errorResMsg } = require('../utils/response');
-const { agentSchema } = require('../schemas');
+const { usersSchema } = require('../schemas');
+
 
 const URL = process.env.NODE_ENV === 'development' ? process.env.DEV_URL : process.env.LIVE_URL;
 
 exports.registerAgent = catchAsync(async (req, res, next) => {
   const {
-    first_name, last_name, password, email, phone_no,
+    first_name, last_name, password, email, phone_no, role,
   } = req.body;
     // Search for all registered Agent
   try {
     logger.info('Validating the req.body');
-    const validatedAgentFields = await agentSchema.validateAsync(req.body);
+    const validatedAgentFields = await usersSchema.validateAsync(req.body);
     logger.info(`Started search for Agent with Phone number: ${phone_no}`);
-    const foundAgent = await db.collection('agents').findOne({ email });
+    const foundAgent = await db.collection('users').findOne({ email });
 
     if (foundAgent == null) {
       logger.info(`Creating agents data with Phone number: ${phone_no}`);
@@ -32,6 +33,7 @@ exports.registerAgent = catchAsync(async (req, res, next) => {
       const basicInfo = {
         email,
         username: fullname,
+        role,
       };
 
       const token = jsonWT.signJWT(basicInfo, '1h');
@@ -40,9 +42,11 @@ exports.registerAgent = catchAsync(async (req, res, next) => {
       validatedAgentFields.username = fullname;
       validatedAgentFields.verification_token = token;
       validatedAgentFields.password = hashPassword;
+      validatedAgentFields.role = role.toLowerCase();
+     
 
       // save agent details
-      await db.collection('agents').insertOne(validatedAgentFields);
+      await db.collection('users').insertOne(validatedAgentFields);
 
       // mail verification code to the agent
       const verificationUrl = `${URL}/v1/auth/email/verify/?verification_code=${token}`;
@@ -73,7 +77,7 @@ exports.verifyEmail = catchAsync(async (req, res, next) => {
 
     // check token expiration
     if (Date.now() <= decoded.exp + Date.now() + 60 * 60) {
-      const user = await db.collection('agents').updateOne({ email: decoded.email }, { $set: { status: '1', email_verified_at: Date.now() } });
+      const user = await db.collection('users').updateOne({ email: decoded.email }, { $set: { status: '1', email_verified_at: Date.now() } });
 
       if (!user) return errorResMsg(res, 404, 'Email is not registered with us');
       if (user.status === 1) return errorResMsg(res, 401, `${decoded.email} has already been verified`);
@@ -96,7 +100,7 @@ exports.loginAgent = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    const currentUser = await db.collection('agents').findOne({ email }); // confirm user email
+    const currentUser = await db.collection('users').findOne({ email }); // confirm user email
     if (currentUser == null) {
       logger.error(`${email} does not exist`);
       return errorResMsg(
@@ -117,13 +121,13 @@ exports.loginAgent = catchAsync(async (req, res, next) => {
     const data = {
       email: currentUser.email,
       userId: currentUser._id.toString(),
-      userRole: currentUser.role,
+      role: currentUser.role,
     };
 
     const time = '1h';
     const token = await jsonWT.signJWT(data, time);
-    await db.collection('agents').updateOne({ email: currentUser.email }, { $set: { verification_token: token } });
-    return res.header('x-auth-token', token).status(200).send({
+    await db.collection('users').updateOne({ email: currentUser.email }, { $set: { verification_token: token } });
+    return res.status(200).send({
       status: 'Success',
       data: {
         message: 'Login Successful',

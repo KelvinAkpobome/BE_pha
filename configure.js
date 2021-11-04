@@ -1,33 +1,41 @@
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
 const express = require('express');
 
-const app = express();
-const session = require('express-session');
-const passport = require('passport');
-const dotenv = require('dotenv');
-const routes = require('./routes/agents');
+const auth = require('./routes/auth');
+const listing = require('./routes/listings');
+const inspection = require('./routes/inspections');
+const admin = require('./routes/admin');
 const errorHandler = require('./utils/error-handler');
+const cors = require('cors');
+
+const app = express();
 
 // load environment config vars
 dotenv.config({ path: './config/config.env' });
-
-// passport config
-require('./config/passport')(passport);
-
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false })); // Bodyparser
-app.use(session({
-  secret: process.env.SECRET,
-  resave: true,
-  saveUninitialized: true,
-}));
-app.use(passport.initialize()); // passport middleware
-app.use(passport.session());
-app.use(cookieParser()); // connect cookieParser
-app.use('/api/v1', routes);
+app.use(express.urlencoded({ extended: false }));
+if (process.env.NODE_ENV === 'production') {
+  app.use(cors({ origin: ['*'] }));
+} else {
+  const whitelist = ['http://localhost:9000', 'http://localhost:4000'];
+  const corsOptions = {
+    origin(origin, callback) {
+      if (whitelist.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+  };
+  app.use(cors(corsOptions));
+}
+
+app.use('/api/v1', auth);
+app.use('/api/v1', listing);
+app.use('/api/v1', admin);
+app.use('/api/v1', inspection);
 // To catch all unhandled routes
-app.get('/api/v1', (req, res, next) => res.status(200).send('Welcome to PHA API'));
+app.get('/', (req, res, next) => res.status(200).send('Welcome to PHA API, lets improve your search'));
 app.all('*', (req, res, next) => {
   next(new Error(`Can't find ${req.originalUrl} on this server!`));
 });
