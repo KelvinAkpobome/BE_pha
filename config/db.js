@@ -2,7 +2,7 @@ const { MongoClient } = require('mongodb');
 const dotenv = require('dotenv');
 const logger = require('../utils/logger');
 // load config
-dotenv.config({ path: './config/config.env' });
+dotenv.config();
 
 const DB_URL = process.env.NODE_ENV === 'development' || 'test'
   ? process.env.DB_DEV_URI

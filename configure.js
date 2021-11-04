@@ -11,7 +11,7 @@ const cors = require('cors');
 const app = express();
 
 // load environment config vars
-dotenv.config({ path: './config/config.env' });
+dotenv.config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 if (process.env.NODE_ENV === 'production') {
@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === 'production') {
   };
   app.use(cors(corsOptions));
 }
-
+dotenv.config()
 app.use('/api/v1', auth);
 app.use('/api/v1', listing);
 app.use('/api/v1', admin);
