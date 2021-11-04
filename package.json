@@ -2,9 +2,9 @@
   "name": "Pha",
   "version": "1.0.0",
   "description": "App to make properties search in Port Harcourt easier",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node server",
+    "start": "node server.js",
     "dev": "cross-env NODE_ENV=development nodemon server",
     "server:prod": "cross-env NODE_ENV=production nodemon server.js",
     "test:server": "cross-env NODE_ENV=test mocha tests/server/server.test.js -r tests/testhelper.js -R spec  --timeout 30000 --recursive --exit",
