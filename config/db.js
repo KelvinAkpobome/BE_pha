@@ -4,10 +4,11 @@ const logger = require('../utils/logger');
 // load config
 dotenv.config();
 
-const DB_URL = process.env.NODE_ENV === 'development' || 'test'
+const DB_URL = process.env.NODE_ENV === 'development'
   ? process.env.DB_DEV_URI
   : process.env.DB_LIVE_URI;
-
+console.log(process.env.NODE_ENV + " environment........")
+console.log("connection URI: " + DB_URL)
 const client = new MongoClient(DB_URL);
 // //connect to Mongo
 exports.connectDB = async () => {

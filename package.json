@@ -4,7 +4,7 @@
   "description": "App to make properties search in Port Harcourt easier",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "cross-env NODE_ENV=production nodemon server.js",
     "dev": "cross-env NODE_ENV=development nodemon server",
     "server:prod": "cross-env NODE_ENV=production nodemon server.js",
     "test:server": "cross-env NODE_ENV=test mocha tests/server/server.test.js -r tests/testhelper.js -R spec  --timeout 30000 --recursive --exit",
@@ -30,6 +30,7 @@
     "cloudinary": "^1.26.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-rate-limit": "^5.3.0",
