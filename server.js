@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 const http = require('http');
+const dotenv = require('dotenv');
+dotenv.config();
 const { connectDB } = require('./config/db');
 
 const PORT = process.env.PORT || 4000;
