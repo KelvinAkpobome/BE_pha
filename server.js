@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const http = require('http');
 const dotenv = require('dotenv');
+
 dotenv.config();
 const { connectDB } = require('./config/db');
 
@@ -27,4 +28,4 @@ const shutdown = () => {
     console.info(`Express server shutting down on port ${PORT}`);
   });
 };
-boot(); 
+boot();

@@ -1,4 +1,4 @@
-const Joi = require('joi').extend((require('@joi/date')))
+const Joi = require('joi').extend((require('@joi/date')));
 
 // agents schema
 exports.usersSchema = Joi.object({
@@ -10,32 +10,33 @@ exports.usersSchema = Joi.object({
   }),
   other_name: Joi.string(),
   password: Joi.string()
-  .regex(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!_`,/@#\-"=:;~<>'\$%\^&\*\?\|\+\(\)\[\]\{}\.])(?=.{8,})/
-  )
-  .trim()
-  .required()
-  .min(1)
-  .error(
-    new Error(
-      'Password should contain a minimum of 8 characters (upper and lowercase letters, numbers and at least one special character)'
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!_`,/@#\-"=:;~<>'\$%\^&\*\?\|\+\(\)\[\]\{}\.])(?=.{8,})/,
     )
-  ),
+    .trim()
+    .required()
+    .min(1)
+    .error(
+      new Error(
+        'Password should contain a minimum of 8 characters (upper and lowercase letters, numbers and at least one special character)',
+      ),
+    ),
   email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().error(
     new Error(
-      'Email  not valid'
-    )
+      'Email  not valid',
+    ),
   ),
   phone_no: Joi.string()
-  .regex(/^\d+[0-9]{10,15}$/)
-  .required()
-  .error(new Error('Phone number should be at least minimum of 11 digits and maximum 16')),
+    .regex(/^\d+[0-9]{10,15}$/)
+    .required()
+    .error(new Error('Phone number should be at least minimum of 11 digits and maximum 16')),
   address: Joi.string().required().error(new Error('Address must be added')),
-  role: Joi.string().valid('agent', 'client').default('none').required().error(
-    new Error(
-      'Role must be added(either agent or client)'
-    )
-  ),
+  role: Joi.string().valid('agent', 'client').default('none').required()
+    .error(
+      new Error(
+        'Role must be added(either agent or client)',
+      ),
+    ),
   status: Joi.number().allow(1, 0).default(0),
   block: Joi.boolean().default(false),
   email_verified_at: Joi.date(),

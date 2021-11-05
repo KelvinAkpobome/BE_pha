@@ -7,7 +7,6 @@ const sendmail = require('../utils/sendEmail');
 const { successResMsg, errorResMsg } = require('../utils/response');
 const { usersSchema } = require('../schemas');
 
-
 const URL = process.env.NODE_ENV === 'development' ? process.env.DEV_URL : process.env.LIVE_URL;
 
 exports.registerAgent = catchAsync(async (req, res, next) => {
@@ -43,7 +42,6 @@ exports.registerAgent = catchAsync(async (req, res, next) => {
       validatedAgentFields.verification_token = token;
       validatedAgentFields.password = hashPassword;
       validatedAgentFields.role = role.toLowerCase();
-     
 
       // save agent details
       await db.collection('users').insertOne(validatedAgentFields);

@@ -12,9 +12,9 @@ exports.scheduleInspection = catchAsync(async (req, res, next) => {
   const scheduleTime = req.body.time;
   try {
     logger.info(`Started search for booking with id: ${bookingId} `);
-    console.log(req.body)
+    console.log(req.body);
     const result = await scheduledInspectionsSchema.validateAsync(req.body);
-    console.log(result)
+    console.log(result);
     const foundbooking = await db.collection('scheduledInspections').findOne({ bookingId });
     if (foundbooking) {
       logger.error(`Scheduled inspection already exist for this booking by ${foundbooking.time}`);
@@ -29,21 +29,21 @@ exports.scheduleInspection = catchAsync(async (req, res, next) => {
     }, { upsert: true });
     logger.info(`Inspection scheduled for ${scheduleTime}`);
     return successResMsg(res, 200, `Inspection scheduled for ${scheduleTime}`);
-  } catch (err){
+  } catch (err) {
     logger.error(err.message);
     return errorResMsg(res, 401, err.message);
   }
 });
 
 exports.rescheduleInspection = catchAsync(async (req, res, next) => {
-  if (!req.params.inspectionId ) return errorResMsg(res, 400, 'Please supply booking ID');
+  if (!req.params.inspectionId) return errorResMsg(res, 400, 'Please supply booking ID');
   const { inspectionId } = req.params;
   const userEmail = req.user.email;
   const scheduleTime = req.body.time;
   try {
     logger.info(`Started search for booking with id: ${inspectionId} `);
     await scheduledInspectionsSchema.validateAsync(req.body);
-    const foundbooking = await db.collection('scheduledInspections').findOne({_id: ObjectID(inspectionId) , userEmail });
+    const foundbooking = await db.collection('scheduledInspections').findOne({ _id: ObjectID(inspectionId), userEmail });
     if (!foundbooking) {
       logger.error('Scheduled inspection does not exist for this booking');
       return errorResMsg(res, 400, 'Scheduled inspection does not exist for this booking');
@@ -56,7 +56,7 @@ exports.rescheduleInspection = catchAsync(async (req, res, next) => {
     });
     logger.info(`Inspection rescheduled for ${scheduleTime}`);
     return successResMsg(res, 200, `Inspection rescheduled for ${scheduleTime}`);
-  } catch (err){
+  } catch (err) {
     logger.error(err.message);
     return errorResMsg(res, 401, err.message);
   }
@@ -74,7 +74,7 @@ exports.cancelInspection = catchAsync(async (req, res, next) => {
       return errorResMsg(res, 404, 'Scheduled inspection not found');
     }
     if (foundbooking.userEmail !== userEmail) return errorResMsg(res, 404, 'Scheduled inspection not found ');
-    await db.collection('scheduledInspections').deleteOne({ _id: ObjectID(inspectionId)  });
+    await db.collection('scheduledInspections').deleteOne({ _id: ObjectID(inspectionId) });
     logger.info('Inspection deleted');
     return successResMsg(res, 200, 'Inspection deleted');
   } catch (err) {

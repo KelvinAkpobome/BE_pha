@@ -4,8 +4,6 @@ const { successResMsg, errorResMsg } = require('../utils/response');
 const catchAsync = require('../utils/catchAsync');
 const logger = require('../utils/logger');
 
-
-
 exports.postListings = catchAsync(async (req, res, next) => {
   const { validatedListings } = req;
   try {
@@ -35,7 +33,8 @@ exports.postListings = catchAsync(async (req, res, next) => {
 exports.getAllListing = catchAsync(async (req, res, next) => {
   try {
     logger.info('Started all listings ');
-    const foundListings = await db.collection('listings').find({}).project({ _id: 0, createdAt: 0, listingId: 0}).sort({ createdAt: 1 }).toArray();
+    const foundListings = await db.collection('listings').find({}).project({ _id: 0, createdAt: 0, listingId: 0 }).sort({ createdAt: 1 })
+      .toArray();
     return successResMsg(res, 200, foundListings);
   } catch (err) {
     logger.error(err.message);
@@ -44,10 +43,14 @@ exports.getAllListing = catchAsync(async (req, res, next) => {
 });
 
 exports.searchListingsByText = catchAsync(async (req, res, next) => {
-  const { category = "", location = "", area = "", price = 0 } = req.query;
+  const {
+    category = '', location = '', area = '', price = 0,
+  } = req.query;
   try {
     logger.info('Started all listings by creation date');
-    const foundListings = await db.collection('listings').find({location, price, area, category}).sort({ createdAt: 1 }).toArray();
+    const foundListings = await db.collection('listings').find({
+      location, price, area, category,
+    }).sort({ createdAt: 1 }).toArray();
     return successResMsg(res, 200, foundListings);
   } catch (err) {
     logger.error(err.message);
@@ -60,17 +63,16 @@ exports.searchListingsByCatType = catchAsync(async (req, res, next) => {
     logger.error('Please enter search details');
     return errorResMsg(res, 404, 'Please enter search details');
   }
-  const { category, type} = req.query;
+  const { category, type } = req.query;
   try {
     logger.info('Started all listings by category and type');
-    const foundListings = await db.collection('listings').find( { category, $text: { $search: type } }).sort({ price: 1 }).toArray();
+    const foundListings = await db.collection('listings').find({ category, $text: { $search: type } }).sort({ price: 1 }).toArray();
     return successResMsg(res, 200, foundListings);
   } catch (err) {
     logger.error(err.message);
     return errorResMsg(res, 401, err.message);
   }
 });
-
 
 exports.sortListingByCreationDate = catchAsync(async (req, res, next) => {
   try {
@@ -82,7 +84,6 @@ exports.sortListingByCreationDate = catchAsync(async (req, res, next) => {
     return errorResMsg(res, 401, err.message);
   }
 });
-
 
 exports.sortListingByPrice = catchAsync(async (req, res, next) => {
   try {
@@ -100,10 +101,11 @@ exports.sortListingByCategory = catchAsync(async (req, res, next) => {
     logger.error('Please enter query details');
     return errorResMsg(res, 404, 'Please enter query details');
   }
-  const  categoryFromDb  = req.query.category;
+  const categoryFromDb = req.query.category;
   try {
     logger.info('Started all listings by category');
-    const foundListings = await db.collection('listings').find( {category: categoryFromDb } ).project({ _id: 0, createdAt: 0, listingId: 0}).sort({price: 1}).toArray()
+    const foundListings = await db.collection('listings').find({ category: categoryFromDb }).project({ _id: 0, createdAt: 0, listingId: 0 }).sort({ price: 1 })
+      .toArray();
     // console.log(foundListings)
     return successResMsg(res, 200, foundListings);
   } catch (err) {
@@ -111,7 +113,6 @@ exports.sortListingByCategory = catchAsync(async (req, res, next) => {
     return errorResMsg(res, 401, err.message);
   }
 });
-
 
 exports.bookListingForInspection = catchAsync(async (req, res, next) => {
   const { listingId } = req.params;
@@ -150,16 +151,16 @@ exports.deleteBooking = catchAsync(async (req, res, next) => {
   const { bookingId } = req.params;
   try {
     logger.info(`Started search for Booking with id: ${bookingId} `);
-    const foundbooking = await db.collection('bookings').find( { _id: ObjectID(bookingId)  }).toArray();
-    console.log(foundbooking)
+    const foundbooking = await db.collection('bookings').find({ _id: ObjectID(bookingId) }).toArray();
+    console.log(foundbooking);
     if (foundbooking.length == 0) {
       logger.error('Booking not found');
       return errorResMsg(res, 404, 'Booking not found');
     }
-    await db.collection('bookings').deleteOne({ _id: ObjectID(bookingId)});
+    await db.collection('bookings').deleteOne({ _id: ObjectID(bookingId) });
     logger.info('Booking deleted');
     return successResMsg(res, 200, 'Booking deleted');
-  } catch (err){
+  } catch (err) {
     logger.error(err.message);
     return errorResMsg(res, 401, err.message);
   }
@@ -169,7 +170,7 @@ exports.deleteOneListingFromBooking = catchAsync(async (req, res, next) => {
   const userEmail = req.user.email;
   try {
     logger.info(`Started search for listing with id: ${listingId} `);
-    const result = await db.collection('bookings').findOneAndUpdate({ userEmail, listingIds : listingId },
+    const result = await db.collection('bookings').findOneAndUpdate({ userEmail, listingIds: listingId },
       {
         $set: { userEmail },
         $pull: { listingIds: listingId },
