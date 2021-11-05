@@ -25,9 +25,4 @@ const shutdown = () => {
     console.info(`Express server shutting down on port ${PORT}`);
   });
 };
-if (require.main === module) {
-  boot(); // "node app.js" command
-} else {
-  exports.boot = boot;
-  exports.shutdown = shutdown;
-}
+boot(); 
