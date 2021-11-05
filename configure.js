@@ -1,5 +1,6 @@
 const dotenv = require('dotenv');
 const express = require('express');
+const  fullMessage  = require('./utils/welcomeMessage')
 
 const auth = require('./routes/auth');
 const listing = require('./routes/listings');
@@ -7,7 +8,7 @@ const inspection = require('./routes/inspections');
 const admin = require('./routes/admin');
 const errorHandler = require('./utils/error-handler');
 const cors = require('cors');
-
+//const test = message('http')
 const app = express();
 
 // load environment config vars
@@ -35,10 +36,11 @@ app.use('/api/v1', listing);
 app.use('/api/v1', admin);
 app.use('/api/v1', inspection);
 // To catch all unhandled routes
-app.get('/', (req, res, next) => res.status(200).send('Welcome to PHA API, lets improve your search'));
+app.get('/', (req, res, next) => res.status(200).send(fullMessage));
 app.all('*', (req, res, next) => {
   next(new Error(`Can't find ${req.originalUrl} on this server!`));
 });
 app.use(errorHandler); // global error handler
 
 module.exports = app;
+
