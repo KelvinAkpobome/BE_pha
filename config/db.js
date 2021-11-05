@@ -9,7 +9,8 @@ const DB_URL = process.env.NODE_ENV === 'development'
   : process.env.DB_LIVE_URI;
 console.log(process.env.NODE_ENV + " environment........")
 console.log("connection URI: " + DB_URL)
-const client = new MongoClient(DB_URL);
+
+const client = new MongoClient(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 // //connect to Mongo
 exports.connectDB = async () => {
   try {
@@ -22,3 +23,5 @@ exports.connectDB = async () => {
 };
 
 exports.db = client.db();
+
+
