@@ -8,6 +8,7 @@ exports.usersSchema = Joi.object({
   last_name: Joi.string().required().messages({
     'any.required': 'Last name is required',
   }),
+  other_name: Joi.string(),
   password: Joi.string()
   .regex(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!_`,/@#\-"=:;~<>'\$%\^&\*\?\|\+\(\)\[\]\{}\.])(?=.{8,})/
@@ -22,16 +23,14 @@ exports.usersSchema = Joi.object({
   ),
   email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required().error(
     new Error(
-      'Password should contain a minimum of 8 characters (upper and lowercase letters, numbers and at least one special character)'
+      'Email  not valid'
     )
   ),
   phone_no: Joi.string()
-  .regex(/^[0]+[0-9]{10,15}$/)
+  .regex(/^\d+[0-9]{10,15}$/)
   .required()
-  .error(new Error('Phone number should be at least 11 digits')),
-  address: Joi.string().required().messages({
-    'any.required': 'Address must be added',
-  }),
+  .error(new Error('Phone number should be at least minimum of 11 digits and maximum 16')),
+  address: Joi.string().required().error(new Error('Address must be added')),
   role: Joi.string().valid('agent', 'client').default('none').required().error(
     new Error(
       'Role must be added(either agent or client)'
