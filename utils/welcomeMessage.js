@@ -8,7 +8,7 @@ const message = (url) => {
             <table width="900px" style="padding: 0 40px 0 40px; background-color:#f1f2f3;">
               <tr>
                 <td align="center" style="background-color:#f9fcff; margin: 0 50px 0 50px;">
-                  <a><img src="" alt="Logo" width="120" height="100" style="display: block;"></a>
+                  <a><img src="https://res.cloudinary.com/drlbf59zf/image/upload/v1636124412/IMG_20210706_091714_910_tv3pww.jpg" alt="Logo" width="120" height="100" style="display: block;"></a>
                 </td>
               </tr>
               <tr>
@@ -23,7 +23,7 @@ const message = (url) => {
                     <tr>
                       <td align="center"
                         style="color: #153643; font-family: sans-serif; font-size: 16px; line-height: 20px;">
-                        <p>You are welcome to Pitakwa Agents API, kindly see the link below for usage</p>
+                        <p>You are welcome to Port Harcourt Agents API, kindly see the link below for usage</p>
                       </td>
                     </tr>
                     <tr>
