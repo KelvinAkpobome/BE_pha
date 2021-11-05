@@ -37,7 +37,8 @@ app.use('/api/v1', listing);
 app.use('/api/v1', admin);
 app.use('/api/v1', inspection);
 // To catch all unhandled routes
-app.get('/', (req, res, next) => res.status(200).send(fullMessage));
+app.get('*', (req, res) => res.status(200).send(fullMessage));
+
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
