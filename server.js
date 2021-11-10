@@ -8,7 +8,7 @@ const { connectDB } = require('./config/db');
 const PORT = process.env.PORT || 4000;
 
 // fully configured express app
-configuredApp = require('./configure');
+const configuredApp = require('./configure');
 
 // connection to db
 connectDB().catch(console.dir);
@@ -28,4 +28,9 @@ const shutdown = () => {
     console.info(`Express server shutting down on port ${PORT}`);
   });
 };
-boot();
+// boot();
+if (require.main === module) {
+  boot();
+}
+exports.shutdown = shutdown;
+exports.boot = boot;

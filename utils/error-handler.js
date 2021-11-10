@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 const { request, response } = require('express');
 const dotenv = require('dotenv');
-const logger = require('./logger.js');
+const logger = require('./logger');
 
 // load config
 dotenv.config({ path: './config/config.env' });

@@ -1,5 +1,7 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-var */
+/* eslint-disable no-unused-vars */
 const faker = require('faker');
-const { v4: uuidv4 } = require('uuid');
 const { db } = require('../config/db');
 const { successResMsg, errorResMsg } = require('../utils/response');
 const catchAsync = require('../utils/catchAsync');
@@ -22,7 +24,7 @@ exports.indexDB = catchAsync(async (req, res, next) => {
 
 exports.seedDB = catchAsync(async (req, res, next) => {
   try {
-    logger.info('Started seeding Db, may take awhile. Sit tight');
+    logger.info('Started seeding Db with 200 listings, may take awhile. Sit tight');
     const listings = [];
 
     for (let i = 0; i < 2000; i++) {
@@ -32,7 +34,11 @@ exports.seedDB = catchAsync(async (req, res, next) => {
         price: faker.datatype.number(),
         category: faker.random.arrayElement(['buy', 'rent']),
         createdAt: new Date(),
-        features: [faker.random.arrayElement(['2 toilets', 'No car park']), faker.random.arrayElement(['Landlord leave within', 'very first floor from top']), faker.random.arrayElement(['No POP', 'Linking Street not tarred'])],
+        features: [
+          faker.random.arrayElement(['2 toilets', 'No car park']),
+          faker.random.arrayElement(['Landlord leave within', 'very first floor from top']),
+          faker.random.arrayElement(['No POP', 'Linking Street not tarred']),
+        ],
         typeOfProperty: faker.random.arrayElement(['1 bedroom flat', 'Self contain', '2 bedroom flat', '3 bedroom flat', '2 bedroom duplex', '3 bedroom duplex', '4 bedroom duplex']),
         charges: [{ 'legal fee': faker.datatype.number() }, { 'Agent fee': faker.datatype.number() }, { 'Caution fee': faker.datatype.number() }],
         images: [faker.image.imageUrl(), faker.image.imageUrl(), faker.image.imageUrl(), faker.image.imageUrl()],

@@ -1,3 +1,12 @@
+/* eslint-disable quotes */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-console */
+/* eslint-disable camelcase */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-shadow */
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+/* eslint-disable consistent-return */
 const bcrypt = require('bcryptjs');
 const { db } = require('../config/db');
 const jsonWT = require('../utils/auth-token');
@@ -7,7 +16,7 @@ const sendmail = require('../utils/sendEmail');
 const { successResMsg, errorResMsg } = require('../utils/response');
 const { usersSchema } = require('../schemas');
 
-const URL = process.env.NODE_ENV === 'development' ? process.env.DEV_URL : process.env.LIVE_URL;
+const URL = process.env.LIVE_URL;
 
 exports.registerAgent = catchAsync(async (req, res, next) => {
   const {
@@ -49,18 +58,18 @@ exports.registerAgent = catchAsync(async (req, res, next) => {
       // mail verification code to the agent
       const verificationUrl = `${URL}/v1/auth/email/verify/?verification_code=${token}`;
 
-      const message = ` Hi ${fullname} thanks for registering, kindly verify your email </p><a href ='${verificationUrl}'>Token</a>`;
+      const message = `<p>Hi ${fullname}, thanks for registering with Port Harcourt Agents, kindly verify your email <a href ="${verificationUrl}">here</a> </p> `;
 
       await sendmail({
         from: process.env.FROM_EMAIL,
         to: basicInfo.email,
         subject: 'Email Verification',
-        text: message,
+        html: message,
       });
       const data = { message: `Verification email sent to ${basicInfo.email}!, please verify account to proceed`, token };
       return successResMsg(res, 201, data);
     }
-    return errorResMsg(res, 403, `An agent already registered with ${email}`);
+    return errorResMsg(res, 403, `Someone already registered with ${email}`);
   } catch (err) {
     logger.error(err.message);
     return errorResMsg(res, 401, err.message);

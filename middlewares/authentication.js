@@ -1,4 +1,4 @@
-const { errorResMsg, AppError } = require('../utils/response');
+const { errorResMsg } = require('../utils/response');
 const { verifyJWT } = require('../utils/auth-token');
 const logger = require('../utils/logger');
 

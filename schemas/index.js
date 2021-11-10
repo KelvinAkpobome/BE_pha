@@ -1,3 +1,11 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-console */
+/* eslint-disable camelcase */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-shadow */
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-useless-escape */
 const Joi = require('joi').extend((require('@joi/date')));
 
 // agents schema
@@ -63,7 +71,7 @@ exports.listingsSchema = Joi.object({
   typeOfProperty: Joi.string().required().messages({
     'any.required': 'type Of Property is required',
   }),
-  charges: Joi.array().required().messages({
+  charges: Joi.object().required().messages({
     'any.required': 'Charges must be added',
   }),
 });

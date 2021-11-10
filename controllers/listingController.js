@@ -1,3 +1,11 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-console */
+/* eslint-disable camelcase */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-shadow */
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+/* eslint-disable consistent-return */
 const { ObjectID } = require('mongodb');
 const { db } = require('../config/db');
 const { successResMsg, errorResMsg } = require('../utils/response');
@@ -35,22 +43,6 @@ exports.getAllListing = catchAsync(async (req, res, next) => {
     logger.info('Started all listings ');
     const foundListings = await db.collection('listings').find({}).project({ _id: 0, createdAt: 0, listingId: 0 }).sort({ createdAt: 1 })
       .toArray();
-    return successResMsg(res, 200, foundListings);
-  } catch (err) {
-    logger.error(err.message);
-    return errorResMsg(res, 401, err.message);
-  }
-});
-
-exports.searchListingsByText = catchAsync(async (req, res, next) => {
-  const {
-    category = '', location = '', area = '', price = 0,
-  } = req.query;
-  try {
-    logger.info('Started all listings by creation date');
-    const foundListings = await db.collection('listings').find({
-      location, price, area, category,
-    }).sort({ createdAt: 1 }).toArray();
     return successResMsg(res, 200, foundListings);
   } catch (err) {
     logger.error(err.message);
@@ -153,7 +145,7 @@ exports.deleteBooking = catchAsync(async (req, res, next) => {
     logger.info(`Started search for Booking with id: ${bookingId} `);
     const foundbooking = await db.collection('bookings').find({ _id: ObjectID(bookingId) }).toArray();
     console.log(foundbooking);
-    if (foundbooking.length == 0) {
+    if (foundbooking.length === 0) {
       logger.error('Booking not found');
       return errorResMsg(res, 404, 'Booking not found');
     }
