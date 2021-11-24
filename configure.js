@@ -17,7 +17,7 @@ dotenv.config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 if (process.env.NODE_ENV === 'production') {
-  app.use(cors({ origin: ['*'] }));
+  app.use(cors({ origin: '*' }));
 } else {
   const whitelist = ['http://localhost:9000', 'http://localhost:4000'];
   const corsOptions = {
